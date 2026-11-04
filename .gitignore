@@ -1,0 +1,2 @@
+# The Groq key lives outside this folder (see api/config.example.php). Never commit one here.
+api/config.php
