@@ -1,7 +1,7 @@
-// Netlify version of api/ask.php: answers visitor questions using only the site's own content (js/data.js).
-// netlify.toml routes /api/ask.php here, so the front end works unchanged on XAMPP and on Netlify.
+// Cloudflare Pages version of api/ask.php: answers visitor questions using only the site's own content (js/data.js).
+// Pages routes every /api/* request here, so the front end's api/ask.php call works unchanged on XAMPP and Cloudflare.
 
-// ponytail: per-instance memory, resets on cold starts; move to Netlify Blobs if the key gets abused.
+// ponytail: per-isolate memory, resets when Cloudflare recycles the worker; move to KV if the key gets abused.
 const hits = new Map();
 const LIMIT = 20;
 const HOUR = 3600 * 1000;
@@ -19,7 +19,9 @@ function overLimit(ip) {
   return false;
 }
 
-export default async (request, context) => {
+export async function onRequest({ request, env, params }) {
+  const path = [].concat(params.path || []).join('/');
+  if (path !== 'ask.php') return json(404, { error: 'Not found.' });
   if (request.method !== 'POST') return json(405, { error: 'POST only.' });
 
   let question = '';
@@ -29,12 +31,14 @@ export default async (request, context) => {
     // bad JSON falls through to the empty-question check
   }
   if (!question || question.length > 500) return json(400, { error: 'Ask a question under 500 characters.' });
-  if (overLimit(context.ip || 'unknown')) return json(429, { error: 'Too many questions this hour. Try again later or send an email.' });
+  if (overLimit(request.headers.get('CF-Connecting-IP') || 'unknown')) {
+    return json(429, { error: 'Too many questions this hour. Try again later or send an email.' });
+  }
 
-  const key = process.env.GROQ_API_KEY;
+  const key = env.GROQ_API_KEY;
   if (!key) return json(500, { error: 'The AI is not configured yet.' });
 
-  const siteData = await (await fetch(new URL('/js/data.js', request.url))).text();
+  const siteData = await (await env.ASSETS.fetch(new URL('/js/data.js', request.url))).text();
   const system = "You are KUFIZ AI, the assistant on Tengku Mohd Syafiz's portfolio (handle: kufiz). "
     + "Answer visitors' questions about him, his work, projects and skills using ONLY the data below. "
     + 'Keep answers short: at most 3 sentences, plain text, no markdown. '
@@ -64,4 +68,4 @@ export default async (request, context) => {
   } catch {
     return json(502, { error: 'The AI is unavailable right now. Please try again.' });
   }
-};
+}
