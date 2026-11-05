@@ -266,7 +266,7 @@ button { color: inherit; }
 .win[hidden] { display: none; }
 .win.active { border-color: color-mix(in srgb, var(--accent) 30%, rgba(255, 255, 255, 0.1)); }
 .win:focus { outline: none; }
-.win.max { left: 8px !important; top: 8px !important; width: calc(100% - 16px) !important; height: calc(100% - 96px) !important; resize: none; }
+.win.max { left: 8px !important; top: 8px !important; width: calc(100% - 16px) !important; height: calc(100% - 112px) !important; resize: none; }
 .win.dragging { user-select: none; }
 @keyframes win-open { from { opacity: 0; transform: scale(0.94) translateY(10px); } }
 
@@ -487,58 +487,112 @@ button { color: inherit; }
 @keyframes bar-up { to { transform: translateY(-100%); } }
 @keyframes bar-down { to { transform: translateY(100%); } }
 
-/* ---------- project drawer (off-canvas, right) ---------- */
+/* ---------- project modal: centred between menu bar and dock ---------- */
 .drawer {
   position: fixed;
-  inset: 0 0 0 auto;
-  width: min(560px, 100vw);
+  inset: 0;
+  width: min(760px, calc(100vw - 32px));
   max-width: none;
-  height: 100%;
-  max-height: none;
-  margin: 0;
+  height: fit-content;
+  max-height: calc(100vh - var(--bar-h) - 120px);
+  margin: auto;
   padding: 0;
+  overflow: hidden;
   color: var(--text);
-  background: rgba(10, 14, 11, 0.94);
+  background: rgba(10, 14, 11, 0.95);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
-  border: 0;
-  border-left: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
-  box-shadow: -30px 0 80px rgba(0, 0, 0, 0.6);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
+  border-radius: 18px;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.65);
+  transform: translateY(calc((var(--bar-h) - 100px) / 2)); /* centre in the space between menu bar and dock */
 }
-.drawer[open] { display: flex; flex-direction: column; animation: drawer-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1); }
-.drawer.closing { animation: drawer-out 0.22s ease-in forwards; }
-.drawer::backdrop { background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(2px); }
-@keyframes drawer-in { from { transform: translateX(100%); } }
-@keyframes drawer-out { to { transform: translateX(100%); } }
+.drawer[open] { display: flex; flex-direction: column; animation: modal-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.15); }
+.drawer.closing { animation: modal-out 0.2s ease-in forwards; }
+.drawer::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(3px); }
+@keyframes modal-in { from { opacity: 0; scale: 0.94; } }
+@keyframes modal-out { to { opacity: 0; scale: 0.96; } }
 .drawer-head { display: flex; align-items: center; gap: 12px; flex: none; padding: 14px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.07); }
 .drawer-title { flex: 1; min-width: 0; overflow: hidden; font: 500 13px var(--mono); color: var(--muted); white-space: nowrap; text-overflow: ellipsis; }
 .drawer-close { padding: 6px 12px; background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border); border-radius: 8px; font: 12px var(--mono); cursor: pointer; }
 .drawer-close:hover { border-color: var(--accent); color: var(--accent); }
-.drawer-body { flex: 1; overflow-y: auto; padding: 22px 20px 32px; }
+.drawer-body { flex: 1; min-height: 0; overflow-y: auto; padding: 22px 24px 28px; }
 
-/* ---------- phones: home screen + full-screen apps ---------- */
+/* ---------- live clock + visit counter (above the founder pill) ---------- */
+.desk-meta { display: grid; gap: 4px; margin-bottom: 18px; }
+.live-clock { display: flex; align-items: baseline; gap: 12px; }
+.live-time { font: 700 clamp(1.6rem, 3vw, 2.4rem) var(--mono); letter-spacing: -0.02em; color: var(--text); font-variant-numeric: tabular-nums; }
+.live-zone { font: 12px var(--mono); color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; }
+.live-date { color: var(--muted); font-size: 14px; }
+.visits { display: inline-flex; align-items: center; gap: 8px; width: fit-content; margin-top: 6px; padding: 4px 12px; color: var(--muted); background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 999px; font: 12px var(--mono); }
+.visits[hidden] { display: none; }
+.visits svg { width: 15px; height: 15px; color: var(--accent); }
+.visits b { color: var(--text); font-weight: 600; }
+.status-icons, .home-indicator { display: none; }
+
+/* ---------- phones: a phone OS ---------- */
 @media (max-width: 767px) {
   body { overflow: auto; }
-  .menubar { padding: 0 6px; }
-  .menu-clock { font-size: 12px; }
-  .desktop { position: relative; inset: auto; min-height: 100svh; padding: calc(var(--bar-h) + 24px) 16px 120px; }
-  .desk-hero { position: static; max-width: none; margin-bottom: 28px; pointer-events: auto; }
-  .desk-hero h1 { font-size: clamp(1.6rem, 7.6vw, 2.4rem); }
-  .wall-static { position: fixed; right: -10%; top: auto; bottom: 90px; width: 70vw; height: 80vw; transform: none; opacity: 0.18; }
-  .desktop-icons { display: grid; position: static; grid-template-columns: repeat(4, 1fr); gap: 14px 4px; }
-  .desk-icon { width: auto; }
-  .app-icon { width: 58px; height: 58px; border-radius: 16px; }
+
+  /* status bar */
+  .menubar { height: 40px; padding: 0 22px; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0; }
+  .menu-brand, .menu-ai { display: none; }
+  .menu-right { width: 100%; justify-content: space-between; margin: 0; }
+  .menu-clock { order: -1; padding: 0; font: 600 15px var(--sans); }
+  .status-icons { display: flex; align-items: center; gap: 6px; color: var(--text); }
+  .status-icons svg { height: 11px; fill: currentColor; }
+  .status-icons svg:first-child { width: 17px; }
+  .status-icons svg:last-child { width: 25px; }
+
+  /* lock-screen style widgets */
+  .desktop { position: relative; inset: auto; z-index: auto; min-height: 100svh; padding: 56px 20px 150px; } /* no stacking context, so open apps cover the dock */
+  .desk-hero { position: static; max-width: none; margin-bottom: 26px; text-align: center; pointer-events: auto; }
+  .desk-meta { justify-items: center; margin-bottom: 20px; }
+  .live-clock { flex-direction: column; align-items: center; gap: 0; }
+  .live-time { font: 300 4.2rem/1 var(--sans); letter-spacing: -0.03em; }
+  .live-zone { order: -1; margin-bottom: 4px; }
+  .live-date { font-size: 15px; color: var(--text); }
+  .desk-hero h1 { font-size: clamp(1.2rem, 6.4vw, 1.7rem); }
+  .desk-role { margin-inline: auto; font-size: 14px; }
+  .founder-pill { margin-bottom: 12px; }
+  .wall-static { position: fixed; right: -18%; top: auto; bottom: 110px; width: 80vw; height: 92vw; transform: none; opacity: 0.12; }
+
+  /* home screen grid */
+  .desktop-icons { display: grid; position: static; grid-template-columns: repeat(4, 1fr); gap: 22px 8px; padding: 18px 10px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 28px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+  .desk-icon { width: auto; padding: 0; gap: 7px; font: 500 11px var(--sans); text-shadow: none; }
+  .desk-icon:hover { background: none; border-color: transparent; }
+  .desk-icon:active .app-icon { transform: scale(0.9); }
+  .app-icon { width: 60px; height: 60px; border-radius: 17px; transition: transform 0.15s; }
   .app-icon svg { width: 28px; height: 28px; }
-  .dock { display: none; }
-  .desk-footer { position: static; display: block; padding: 0 16px 24px; }
-  .windows { position: fixed; inset: var(--bar-h) 0 0; z-index: 95; }
-  .win { left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; border-radius: 0; resize: none; border: 0; }
-  .win-bar { cursor: default; }
+
+  /* dock: four favourites in a glass bar */
+  .dock { display: block; bottom: 22px; width: calc(100% - 28px); padding: 12px 16px; border-radius: 30px; }
+  .dock ul { justify-content: space-around; }
+  .dock li:nth-child(3), .dock li:nth-child(4), .dock li:nth-child(5) { display: none; }
+  .dock-btn { padding: 0; }
+  .dock-btn:hover, .dock-btn:focus-visible { transform: none; }
+  .dock-btn::after, .dock-tip { display: none; }
+  .dock .app-icon { width: 58px; height: 58px; border-radius: 17px; }
+  .home-indicator { display: block; position: fixed; left: 50%; bottom: 7px; z-index: 96; width: 130px; height: 5px; transform: translateX(-50%); background: rgba(255, 255, 255, 0.55); border-radius: 999px; }
+  .desk-footer { position: static; display: block; padding: 0 20px 130px; text-align: center; }
+
+  /* apps open full screen and slide up, with a back button */
+  .windows { position: fixed; inset: 0; z-index: 95; }
+  .win { left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; padding-top: 40px; border-radius: 0; resize: none; border: 0; background: rgba(8, 11, 9, 0.97); animation: app-in 0.32s cubic-bezier(0.2, 0.9, 0.2, 1); }
+  @keyframes app-in { from { transform: translateY(100%); } }
+  .win-bar { height: 48px; cursor: default; border-bottom-color: rgba(255, 255, 255, 0.08); }
+  .win-lights { width: auto; }
   .win-lights .light-min, .win-lights .light-max { display: none; }
-  .light-close { width: auto; height: auto; padding: 4px 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.08) !important; color: var(--text); font: 12px var(--mono); }
-  .light-close::before { content: '← back'; }
-  .win-body { padding: 18px 16px; }
+  .light-close { width: auto; height: auto; padding: 4px 0; border-radius: 0; background: none !important; color: var(--accent); font: 500 15px var(--sans); }
+  .light-close::before { content: '‹ Home'; }
+  .win-title { font: 600 15px var(--sans); color: var(--text); }
+  .win-spacer { width: 56px; }
+  .win-body { padding: 18px 16px 40px; }
   .finder-bar { top: -18px; margin: -18px -16px 16px; padding: 10px 16px; }
+
+  /* project sheet rises from the bottom */
+  .drawer { inset: auto 0 0; width: 100%; max-height: 88svh; margin: 0; border-radius: 22px 22px 0 0; transform: none; }
+  .drawer[open] { animation: app-in 0.3s cubic-bezier(0.2, 0.9, 0.2, 1); }
 }
 
 @media (prefers-reduced-motion: reduce) {

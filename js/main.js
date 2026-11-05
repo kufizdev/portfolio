@@ -70,12 +70,19 @@ let zTop = 10;
 let spawnCount = 0;
 let scenes = null; // the yard.js module once loaded (desktop + WebGL only)
 
+// Windows live between the menu bar and the dock, never under either.
+const BAR_H = 34;
+const DOCK_SPACE = 100;
+const EDGE = 16;
+const workHeight = () => innerHeight - BAR_H - DOCK_SPACE;
+
+// New windows open centred in that area, nudged a little each time so they don't stack exactly.
 function windowPosition(w, h, preferred) {
   if (preferred) return preferred;
-  const step = (spawnCount++ % 6) * 30;
-  const left = Math.min(innerWidth - w - 24, Math.max(24, innerWidth * 0.22 + step));
-  const top = Math.min(innerHeight - h - 96, 64 + step);
-  return { left, top: Math.max(48, top) };
+  const step = (spawnCount++ % 5) * 26;
+  const left = Math.max(EDGE, Math.min(innerWidth - w - EDGE, (innerWidth - w) / 2 + step));
+  const top = Math.max(EDGE, Math.min(workHeight() - h, (workHeight() - h) / 2 + step));
+  return { left, top };
 }
 
 function focusWindow(el) {
@@ -121,7 +128,7 @@ function makeDraggable(el, bar) {
     el.classList.add('dragging');
     const move = (ev) => {
       const left = Math.min(innerWidth - 80, Math.max(80 - el.offsetWidth, ev.clientX - offsetX));
-      const top = Math.min(innerHeight - 80, Math.max(40, ev.clientY - offsetY));
+      const top = Math.min(workHeight() - 40, Math.max(8, ev.clientY - offsetY));
       el.style.left = `${left}px`;
       el.style.top = `${top}px`;
     };
@@ -149,7 +156,7 @@ function openWindow(spec, preferred) {
   }
 
   const w = Math.min(spec.w, innerWidth - 32);
-  const h = Math.min(spec.h, innerHeight - 120);
+  const h = Math.min(spec.h, workHeight() - EDGE * 2);
   const pos = windowPosition(w, h, preferred);
   const el = document.createElement('section');
   el.className = `win win-${spec.id.split('-')[0]}`;
@@ -243,15 +250,38 @@ function renderChrome() {
   });
 }
 
+// Menu bar clock (visitor's time) plus a live clock of my local time in Malaysia.
 function startClock() {
   const clock = $('#clock');
+  const liveTime = $('#live-time');
+  const liveDate = $('#live-date');
+  const tz = 'Asia/Kuala_Lumpur';
   const tick = () => {
     const now = new Date();
     clock.dateTime = now.toISOString();
-    clock.textContent = now.toLocaleString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    clock.textContent = isMobile()
+      ? now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+      : now.toLocaleString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    liveTime.textContent = now.toLocaleTimeString('en-GB', { timeZone: tz, hour12: false });
+    liveDate.textContent = now.toLocaleDateString('en-GB', { timeZone: tz, weekday: 'long', day: 'numeric', month: 'long' });
   };
   tick();
-  setInterval(tick, 30000);
+  setInterval(tick, 1000);
+}
+
+// Profile visit counter: counted once per browser session, shown only if the server has a count.
+async function loadVisits() {
+  const firstThisSession = !storageGet('kufiz-visited');
+  storageSet('kufiz-visited', '1');
+  try {
+    const res = await fetch('api/visits.php', { method: firstThisSession ? 'POST' : 'GET' });
+    const { count } = await res.json();
+    if (typeof count !== 'number') return;
+    $('#visit-count').textContent = count.toLocaleString('en-US');
+    $('#visits').hidden = false;
+  } catch {
+    // counter is optional; stay hidden
+  }
 }
 
 /* ---------- about ---------- */
@@ -273,6 +303,7 @@ function aboutHtml() {
         <button type="button" class="btn btn-solid" data-app="projects">view projects</button>
         <button type="button" class="btn" data-app="contact">contact</button>
         <button type="button" class="btn btn-ghost" data-app="ai">ask my AI</button>
+        <a class="btn btn-ghost" href="assets/resume.pdf" download="Tengku-Mohd-Syafiz-Resume.pdf">download resume ↓</a>
       </div>
       <ul class="stats">${stats}</ul>
       <div class="about-text">${about.map((line) => `<p>${esc(line)}</p>`).join('')}</div>
@@ -548,7 +579,7 @@ function mountTerminal(el) {
 
 // The opening "whoami" scene in the terminal.
 async function terminalIntro() {
-  const el = openApp('terminal', { left: 32, top: 24 });
+  const el = openApp('terminal', { left: 32, top: EDGE });
   if (!el || isMobile()) return;
   const input = $('#term-input', el);
   if (!reduceMotion) {
@@ -678,6 +709,7 @@ function contactHtml() {
           <div class="cta">
             <a class="btn btn-solid" href="mailto:${contact.email}">email me</a>
             <button type="button" class="btn copy-email">copy email</button>
+            <a class="btn btn-ghost" href="assets/resume.pdf" download="Tengku-Mohd-Syafiz-Resume.pdf">resume (PDF) ↓</a>
           </div>
           <ul class="methods">
             ${method(icon('mail'), 'Email', contact.email, `mailto:${contact.email}`)}
@@ -881,13 +913,13 @@ async function init() {
   renderChrome();
   initDrawer();
   startClock();
+  loadVisits();
   initKonami();
   await loadScenes();
   await runBoot();
 
   if (isMobile()) return; // phones start on the home screen
-  // About on the right, terminal top-left, name visible bottom-left.
-  openApp('about', { left: Math.max(24, innerWidth - Math.min(600, innerWidth - 32) - 32), top: 16 });
+  // First view keeps the desktop clear: name and clock bottom-left, logo right, terminal top-left.
   terminalIntro();
 }
 

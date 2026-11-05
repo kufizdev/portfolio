@@ -48,11 +48,23 @@
     <div class="menu-right">
       <button type="button" class="menu-ai" data-app="ai"><span class="status-dot"></span>AI online</button>
       <time id="clock" class="menu-clock"></time>
+      <span class="status-icons" aria-hidden="true">
+        <svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+        <svg viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="3" fill="none" stroke="currentColor"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.5"/><rect x="24" y="4" width="2" height="4" rx="1"/></svg>
+      </span>
     </div>
   </header>
 
   <main id="desktop" class="desktop">
     <div class="desk-hero">
+      <div class="desk-meta">
+        <p class="live-clock"><time id="live-time" class="live-time">--:--:--</time><span class="live-zone">Selangor · MYT</span></p>
+        <p id="live-date" class="live-date"></p>
+        <p id="visits" class="visits" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+          <b id="visit-count"></b> profile visits
+        </p>
+      </div>
       <p class="founder-pill"><span class="pulse" aria-hidden="true"></span>Founder of <strong id="hero-founder"></strong></p>
       <h1 id="hero-name"></h1>
       <p id="hero-role" class="desk-role"></p>
@@ -63,6 +75,7 @@
 
   <nav id="dock" class="dock" aria-label="Dock"><ul id="dock-list"></ul></nav>
 
+  <div class="home-indicator" aria-hidden="true"></div>
   <footer class="desk-footer">© <span id="year"></span> kufiz.dev — built from scratch, no frameworks</footer>
 
   <dialog id="drawer" class="drawer" aria-labelledby="drawer-title">

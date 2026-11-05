@@ -1,5 +1,5 @@
-// Cloudflare Pages version of api/ask.php: answers visitor questions using only the site's own content (js/data.js).
-// Pages routes every /api/* request here, so the front end's api/ask.php call works unchanged on XAMPP and Cloudflare.
+// Cloudflare Pages versions of api/ask.php (KUFIZ AI) and api/visits.php (profile visit counter).
+// Pages routes every /api/* request here, so the front end's api/*.php calls work unchanged on XAMPP and Cloudflare.
 
 // ponytail: per-isolate memory, resets when Cloudflare recycles the worker; move to KV if the key gets abused.
 const hits = new Map();
@@ -21,7 +21,24 @@ function overLimit(ip) {
 
 export async function onRequest({ request, env, params }) {
   const path = [].concat(params.path || []).join('/');
-  if (path !== 'ask.php') return json(404, { error: 'Not found.' });
+  if (path === 'visits.php') return visits(request, env);
+  if (path === 'ask.php') return ask(request, env);
+  return json(404, { error: 'Not found.' });
+}
+
+// Visit counter in the VISITS KV namespace (bind it under Settings > Bindings).
+// ponytail: KV read-then-write isn't atomic, so simultaneous visits can undercount; use a Durable Object if exact counts matter.
+async function visits(request, env) {
+  if (!env.VISITS) return json(200, { count: null });
+  let count = Number(await env.VISITS.get('count')) || 0;
+  if (request.method === 'POST') {
+    count += 1;
+    await env.VISITS.put('count', String(count));
+  }
+  return json(200, { count });
+}
+
+async function ask(request, env) {
   if (request.method !== 'POST') return json(405, { error: 'POST only.' });
 
   let question = '';

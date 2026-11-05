@@ -192,7 +192,7 @@ export function startYard(host, { animate }) {
     },
     onResize(aspect) {
       // Wide screens: logo sits right of centre, clear of the first window.
-      homeX = aspect > 1.3 ? 0.6 : 0;
+      homeX = aspect > 1.3 ? 3.6 : 0;
     },
   });
 
