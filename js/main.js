@@ -265,6 +265,19 @@ function initAppDots() {
   update();
 }
 
+// Phone dock slides away while scrolling down the home screen, and back on scroll up.
+function initDockHide() {
+  const dock = $('#dock');
+  let lastY = scrollY;
+  addEventListener('scroll', () => {
+    if (!isMobile()) return;
+    const y = scrollY;
+    if (Math.abs(y - lastY) < 6) return;
+    dock.classList.toggle('tucked', y > lastY && y > 40);
+    lastY = y;
+  }, { passive: true });
+}
+
 function startClock() {
   const clock = $('#clock');
   const liveTime = $('#live-time');
@@ -961,6 +974,7 @@ async function init() {
   renderChrome();
   initDrawer();
   initAppDots();
+  initDockHide();
   startClock();
   loadVisits();
   startFeature();

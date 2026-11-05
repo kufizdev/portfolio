@@ -648,6 +648,8 @@ button { color: inherit; }
 
   /* dock: four favourites in a glass bar */
   .dock { display: block; bottom: 22px; width: calc(100% - 28px); padding: 12px 16px; border-radius: 30px; }
+  .dock { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s; }
+  .dock.tucked { transform: translate(-50%, calc(100% + 40px)); opacity: 0; }
   .dock ul { justify-content: space-around; }
   .dock li:nth-child(3), .dock li:nth-child(4), .dock li:nth-child(5) { display: none; }
   .dock-btn { padding: 0; }
