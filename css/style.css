@@ -111,6 +111,9 @@ button { color: inherit; }
 .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
 .menu-ai.busy .status-dot { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
 .menu-clock { padding: 0 6px; color: var(--text); white-space: nowrap; }
+.menu-resume { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; color: var(--bg); background: var(--accent); border-radius: 6px; font-weight: 600; text-decoration: none; }
+.menu-resume:hover { filter: brightness(1.1); }
+.hero-resume { margin-top: 18px; pointer-events: auto; }
 
 /* ---------- desktop ---------- */
 .desktop { position: fixed; inset: var(--bar-h) 0 0; z-index: 1; }
@@ -579,7 +582,7 @@ button { color: inherit; }
 
   /* status bar */
   .menubar { height: 40px; padding: 0 22px; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0; }
-  .menu-brand, .menu-ai { display: none; }
+  .menu-brand, .menu-ai, .menu-resume { display: none; }
   .menu-right { width: 100%; justify-content: space-between; margin: 0; }
   .menu-clock { order: -1; padding: 0; font: 600 15px var(--sans); }
   .status-icons { display: flex; align-items: center; gap: 6px; color: var(--text); }
