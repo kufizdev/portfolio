@@ -571,7 +571,7 @@ button { color: inherit; }
 .w-feature.swap .thumb, .w-feature.swap .w-feature-name, .w-feature.swap .w-feature-desc { animation: fade-in 0.5s ease-out; }
 @keyframes fade-in { from { opacity: 0; } }
 
-.status-icons, .home-indicator { display: none; }
+.status-icons, .home-indicator, .app-dots { display: none; }
 
 /* ---------- phones: a phone OS ---------- */
 @media (max-width: 767px) {
@@ -606,7 +606,40 @@ button { color: inherit; }
   .wall-static { position: fixed; right: -18%; top: auto; bottom: 110px; width: 80vw; height: 92vw; transform: none; opacity: 0.12; }
 
   /* home screen grid */
-  .desktop-icons { display: grid; position: static; grid-template-columns: repeat(4, 1fr); gap: 22px 8px; padding: 18px 10px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 28px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+  /* apps in one row you swipe left, a page of four at a time */
+  .desktop-icons {
+    display: grid;
+    position: static;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - 24px) / 4);
+    gap: 8px;
+    padding: 16px 0 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 28px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .desktop-icons::-webkit-scrollbar { display: none; }
+  .desktop-icons li:nth-child(4n + 1) { scroll-snap-align: start; }
+  .app-dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+  .app-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(255, 255, 255, 0.25); transition: background 0.2s, width 0.2s; }
+  .app-dots span.on { width: 16px; border-radius: 3px; background: var(--accent); }
+
+  /* KUFIZ AI: no empty orb space, suggestions as a swipeable row */
+  .ai { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  .orb-box { display: none; }
+  .ai-side { gap: 6px; padding: 14px 16px 12px; }
+  .ai-side .muted { font-size: 14px; }
+  .suggest-list { display: flex; gap: 8px; margin: 4px -16px 0; padding: 0 16px 2px; overflow-x: auto; scrollbar-width: none; }
+  .suggest-list::-webkit-scrollbar { display: none; }
+  .suggest { flex: none; min-height: 38px; padding: 7px 14px; border-radius: 999px; font-size: 13px; white-space: nowrap; }
+  .suggest span { display: none; }
+  .chat { min-height: 0; }
   .desk-icon { width: auto; padding: 0; gap: 7px; font: 500 11px var(--sans); text-shadow: none; }
   .desk-icon:hover { background: none; border-color: transparent; }
   .desk-icon:active .app-icon { transform: scale(0.9); }
