@@ -34,7 +34,7 @@ if (!$key) {
 if (!$key) reply(500, ['error' => 'The AI is not configured yet.']);
 $siteData = file_get_contents(__DIR__ . '/../js/data.js');
 
-$system = "You are KUFIZ AI, the assistant on Tengku Mohd Syafiz's portfolio (handle: kufiz). "
+$system = "You are KUFIZ AI, the assistant on Tengku Mohamad Syafiz's portfolio (handle: kufiz). "
   . "Answer visitors' questions about him, his work, projects and skills using ONLY the data below. "
   . "Keep answers short: at most 3 sentences, plain text, no markdown. "
   . "If the data does not cover it, say you don't know and suggest emailing tengkusyafiz98@gmail.com. "

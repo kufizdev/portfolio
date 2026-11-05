@@ -1,7 +1,8 @@
 // All site content lives here. Edit freely; layout code reads from these exports.
 
 export const profile = {
-  name: 'Tengku Mohd Syafiz',
+  name: 'Tengku Mohamad Syafiz',
+  nameRest: 'Bin Tengku Mohamad Hazmiza', // shown small under the name
   handle: 'kufiz',
   role: 'Full-Stack Developer',
   founder: 'kufiz.dev',

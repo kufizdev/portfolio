@@ -131,6 +131,15 @@ button { color: inherit; }
   background-clip: text;
   color: transparent;
 }
+.name-rest {
+  display: block;
+  margin-top: 8px;
+  font: 500 0.28em/1.2 var(--mono);
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  -webkit-text-fill-color: var(--muted); /* opt out of the gradient text fill */
+}
+.about-name .name-rest { margin-top: 4px; font-size: 0.5em; }
 .desk-role { max-width: 52ch; margin-top: 12px; color: var(--muted); font-size: 15px; }
 .founder-pill {
   display: inline-flex;

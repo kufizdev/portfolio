@@ -220,7 +220,7 @@ function toggleApp(id) {
 /* ---------- desktop chrome ---------- */
 
 function renderChrome() {
-  $('#hero-name').textContent = profile.name;
+  $('#hero-name').innerHTML = `${esc(profile.name)} <small class="name-rest">${esc(profile.nameRest)}</small>`;
   $('#hero-role').textContent = `${profile.role} · ${profile.pitch}`;
   $('#hero-founder').textContent = profile.founder;
   $('#year').textContent = new Date().getFullYear();
@@ -325,7 +325,7 @@ function aboutHtml() {
       <div class="about-head">
         <svg class="about-logo" aria-hidden="true"><use href="#logo"/></svg>
         <div>
-          <p class="about-name">${esc(profile.name)}</p>
+          <p class="about-name">${esc(profile.name)} <small class="name-rest">${esc(profile.nameRest)}</small></p>
           <p class="about-role">${esc(profile.role)} · Founder of <b>${esc(profile.founder)}</b></p>
         </div>
       </div>
@@ -334,7 +334,7 @@ function aboutHtml() {
         <button type="button" class="btn btn-solid" data-app="projects">view projects</button>
         <button type="button" class="btn" data-app="contact">contact</button>
         <button type="button" class="btn btn-ghost" data-app="ai">ask my AI</button>
-        <a class="btn btn-ghost" href="assets/resume.pdf" download="Tengku-Mohd-Syafiz-Resume.pdf">download resume ↓</a>
+        <a class="btn btn-ghost" href="assets/resume.pdf" download="Tengku-Mohamad-Syafiz-Resume.pdf">download resume ↓</a>
       </div>
       <ul class="stats">${stats}</ul>
       <div class="about-text">${about.map((line) => `<p>${esc(line)}</p>`).join('')}</div>
@@ -743,7 +743,7 @@ function contactHtml() {
           <div class="cta">
             <a class="btn btn-solid" href="mailto:${contact.email}">email me</a>
             <button type="button" class="btn copy-email">copy email</button>
-            <a class="btn btn-ghost" href="assets/resume.pdf" download="Tengku-Mohd-Syafiz-Resume.pdf">resume (PDF) ↓</a>
+            <a class="btn btn-ghost" href="assets/resume.pdf" download="Tengku-Mohamad-Syafiz-Resume.pdf">resume (PDF) ↓</a>
           </div>
           <ul class="methods">
             ${method(icon('mail'), 'Email', contact.email, `mailto:${contact.email}`)}
