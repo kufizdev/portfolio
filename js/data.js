@@ -9,7 +9,7 @@ export const profile = {
   whoami: 'kufiz: full-stack developer at Westports and founder of kufiz.dev. Builds port systems by day, games and tools by night.',
   stats: [
     { value: '5+', label: 'years in production' },
-    { value: '10', label: 'projects shipped or in progress' },
+    { value: '11', label: 'projects shipped or in progress' },
     { value: '2', label: 'national innovation medals' },
   ],
   facts: [
@@ -214,11 +214,28 @@ export const projects = [
     stack: ['Python', 'Hermes Agent', 'Ollama', 'Gemini', 'Groq'],
     links: [],
   },
+  {
+    id: 'kfz-011',
+    name: 'Siraj TV',
+    status: 'CLIENT',
+    color: '#ff4d3d',
+    categories: ['web'],
+    summary: 'Portfolio for an event admin, designer and emcee.',
+    description: 'A portfolio I designed and built for my friend Muhammad Siraj, who runs events, designs the posters and videos, then hosts them live. The whole site is styled as a live TV broadcast: an ON AIR badge, a running clock, camera framing and a news ticker.',
+    features: [
+      'Live-broadcast theme: ON AIR badge, REC camera frame, news ticker',
+      'Sections as channels: Profile, Multicam, News, Replay, Call in',
+      'Bilingual focus: Malay and English',
+      'Hosted free on GitHub Pages',
+    ],
+    stack: ['HTML', 'CSS', 'JavaScript', 'GitHub Pages'],
+    links: [{ label: 'Visit site', href: 'https://kufizdev.github.io/siraj/' }],
+  },
 ];
 
 // Project ids that have a screenshot at assets/<id>.webp, e.g. ['kfz-002'].
 // Others show a placeholder (keeps 404s out of the console).
-export const screenshots = ['kfz-001', 'kfz-002', 'kfz-003', 'kfz-005', 'kfz-006', 'kfz-007', 'kfz-008', 'kfz-009', 'kfz-010'];
+export const screenshots = ['kfz-001', 'kfz-002', 'kfz-003', 'kfz-005', 'kfz-006', 'kfz-007', 'kfz-008', 'kfz-009', 'kfz-010', 'kfz-011'];
 
 export const experience = [
   {
