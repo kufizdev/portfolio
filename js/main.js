@@ -251,33 +251,6 @@ function renderChrome() {
 }
 
 // Menu bar clock (visitor's time) plus a live clock of my local time in Malaysia.
-// Phone home screen: page dots under the swipeable app row.
-function initAppDots() {
-  const row = $('#desktop-icons');
-  const dots = $('#app-dots');
-  const pages = Math.ceil(APPS.length / 4);
-  dots.innerHTML = '<span></span>'.repeat(pages);
-  const update = () => {
-    const page = Math.round(row.scrollLeft / Math.max(1, row.clientWidth));
-    [...dots.children].forEach((dot, i) => dot.classList.toggle('on', i === page));
-  };
-  row.addEventListener('scroll', update, { passive: true });
-  update();
-}
-
-// Phone dock slides away while scrolling down the home screen, and back on scroll up.
-function initDockHide() {
-  const dock = $('#dock');
-  let lastY = scrollY;
-  addEventListener('scroll', () => {
-    if (!isMobile()) return;
-    const y = scrollY;
-    if (Math.abs(y - lastY) < 6) return;
-    dock.classList.toggle('tucked', y > lastY && y > 40);
-    lastY = y;
-  }, { passive: true });
-}
-
 function startClock() {
   const clock = $('#clock');
   const liveTime = $('#live-time');
@@ -973,8 +946,7 @@ async function loadScenes() {
 async function init() {
   renderChrome();
   initDrawer();
-  initAppDots();
-  initDockHide();
+
   startClock();
   loadVisits();
   startFeature();
