@@ -579,7 +579,7 @@ function mountTerminal(el) {
 
 // The opening "whoami" scene in the terminal.
 async function terminalIntro() {
-  const el = openApp('terminal', { left: 32, top: EDGE });
+  const el = openApp('terminal', { left: 32, top: 64 }); // below the clock strip
   if (!el || isMobile()) return;
   const input = $('#term-input', el);
   if (!reduceMotion) {
