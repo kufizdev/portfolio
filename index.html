@@ -56,14 +56,19 @@
   </header>
 
   <main id="desktop" class="desktop">
-    <div class="desk-meta">
-      <p class="live-clock"><time id="live-time" class="live-time">--:--:--</time><span class="live-zone">Selangor · MYT</span></p>
-      <p id="live-date" class="live-date"></p>
-      <p id="visits" class="visits" hidden>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-        <b id="visit-count"></b> profile visits
-      </p>
-    </div>
+    <section class="widgets" aria-label="Widgets">
+      <div class="widget w-clock">
+        <p class="w-label">Selangor · MYT</p>
+        <time id="live-time" class="live-time">--:--:--</time>
+        <p id="live-date" class="live-date"></p>
+      </div>
+      <div id="visits" class="widget w-visits" hidden>
+        <p class="w-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Profile visits</p>
+        <p class="w-big" id="visit-count"></p>
+        <p class="w-sub">all time</p>
+      </div>
+      <button type="button" id="feature" class="widget w-feature"></button>
+    </section>
     <div class="desk-hero">
       <p class="founder-pill"><span class="pulse" aria-hidden="true"></span>Founder of <strong id="hero-founder"></strong></p>
       <h1 id="hero-name"></h1>

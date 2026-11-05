@@ -284,6 +284,37 @@ async function loadVisits() {
   }
 }
 
+/* ---------- featured project widget ---------- */
+
+// Cycles through projects that have screenshots; clicking opens the project.
+function startFeature() {
+  const card = $('#feature');
+  const list = projects.filter((p) => screenshots.includes(p.id));
+  let index = 0;
+  const show = () => {
+    const p = list[index];
+    card.dataset.project = p.id;
+    card.setAttribute('aria-label', `Featured project: ${p.name}. Open details`);
+    card.innerHTML = `
+      <span class="w-feature-head"><span class="w-label">Featured project</span>${badge(p.status)}</span>
+      ${thumb(p)}
+      <span class="w-feature-name">${esc(p.name)}</span>
+      <span class="w-feature-desc">${esc(p.summary)}</span>
+      <span class="w-feature-open">open →</span>`;
+    card.classList.remove('swap');
+    void card.offsetWidth; // restart the fade
+    card.classList.add('swap');
+  };
+  card.addEventListener('click', () => openProject(card.dataset.project));
+  show();
+  if (reduceMotion) return;
+  setInterval(() => {
+    if (document.hidden) return;
+    index = (index + 1) % list.length;
+    show();
+  }, 6000);
+}
+
 /* ---------- about ---------- */
 
 function aboutHtml() {
@@ -579,7 +610,10 @@ function mountTerminal(el) {
 
 // The opening "whoami" scene in the terminal.
 async function terminalIntro() {
-  const el = openApp('terminal', { left: 32, top: 64 }); // below the clock strip
+  // Bottom-right, clear of the widgets (top-left) and the name (bottom-left).
+  const w = Math.min(appById('terminal').w, innerWidth - 32);
+  const h = Math.min(appById('terminal').h, workHeight() - EDGE * 2);
+  const el = openApp('terminal', { left: innerWidth - w - 40, top: workHeight() - h - EDGE });
   if (!el || isMobile()) return;
   const input = $('#term-input', el);
   if (!reduceMotion) {
@@ -914,6 +948,7 @@ async function init() {
   initDrawer();
   startClock();
   loadVisits();
+  startFeature();
   initKonami();
   await loadScenes();
   await runBoot();

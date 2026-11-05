@@ -116,6 +116,8 @@ button { color: inherit; }
 .desktop { position: fixed; inset: var(--bar-h) 0 0; z-index: 1; }
 .desk-hero { position: absolute; left: 40px; bottom: 120px; max-width: 640px; pointer-events: none; }
 .desk-hero h1 {
+  width: max-content; /* the gradient only paints inside the box, so it must fit the whole name */
+  padding-right: 0.06em;
   white-space: nowrap;
   font-size: clamp(2rem, 4.4vw, 4rem);
   font-weight: 800;
@@ -518,33 +520,44 @@ button { color: inherit; }
 .drawer-close:hover { border-color: var(--accent); color: var(--accent); }
 .drawer-body { flex: 1; min-height: 0; overflow-y: auto; padding: 22px 24px 28px; }
 
-/* ---------- live clock + visit counter (above the founder pill) ---------- */
-/* Desktop: one glass strip centred just below the menu bar. */
-.desk-meta {
+/* ---------- desktop widgets (left column): clock, visits, featured project ---------- */
+.widgets {
   position: absolute;
-  top: 12px;
-  left: 50%;
+  top: 16px;
+  left: 40px;
   z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 6px 8px 6px 18px;
-  white-space: nowrap;
-  transform: translateX(-50%);
-  background: rgba(14, 20, 16, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
+  display: grid;
+  grid-template-columns: 230px 290px;
+  gap: 12px;
 }
-.live-clock { display: flex; align-items: baseline; gap: 10px; }
-.live-time { font: 700 16px var(--mono); color: var(--text); font-variant-numeric: tabular-nums; }
-.live-zone { font: 11px var(--mono); color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; }
-.live-date { padding-left: 14px; color: var(--muted); font-size: 13px; border-left: 1px solid var(--border); }
-.visits { display: inline-flex; align-items: center; gap: 8px; width: fit-content; padding: 4px 12px; color: var(--muted); background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 999px; font: 12px var(--mono); }
-.visits[hidden] { display: none; }
-.visits svg { width: 15px; height: 15px; color: var(--accent); }
-.visits b { color: var(--text); font-weight: 600; }
+.widget {
+  padding: 14px 16px;
+  color: var(--text);
+  text-align: left;
+  background: rgba(14, 20, 16, 0.62);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+.w-label { display: flex; align-items: center; gap: 6px; font: 11px var(--mono); color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; }
+.w-label svg { width: 14px; height: 14px; }
+.live-time { display: block; margin-top: 6px; font: 700 2.3rem/1 var(--mono); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.live-date { margin-top: 6px; color: var(--muted); font-size: 13px; }
+.w-visits[hidden] { display: none; }
+.w-big { margin-top: 6px; font: 800 2rem/1 var(--mono); }
+.w-sub { margin-top: 4px; color: var(--muted); font-size: 12px; }
+.w-feature { grid-column: 2; grid-row: 1 / span 2; display: flex; flex-direction: column; gap: 8px; font: inherit; cursor: pointer; transition: border-color 0.2s, transform 0.2s; }
+.w-feature:hover { border-color: color-mix(in srgb, var(--accent) 45%, transparent); transform: translateY(-2px); }
+.w-feature .thumb { border-radius: 12px; border: 1px solid var(--border); }
+.w-feature-head { display: flex; justify-content: space-between; align-items: center; }
+.w-feature-name { font: 700 15px var(--mono); }
+.w-feature-desc { color: var(--muted); font-size: 13px; line-height: 1.4; }
+.w-feature-open { margin-top: auto; font: 12px var(--mono); color: var(--accent); }
+.w-feature.swap .thumb, .w-feature.swap .w-feature-name, .w-feature.swap .w-feature-desc { animation: fade-in 0.5s ease-out; }
+@keyframes fade-in { from { opacity: 0; } }
+
 .status-icons, .home-indicator { display: none; }
 
 /* ---------- phones: a phone OS ---------- */
@@ -564,13 +577,17 @@ button { color: inherit; }
   /* lock-screen style widgets */
   .desktop { position: relative; inset: auto; z-index: auto; min-height: 100svh; padding: 56px 20px 150px; } /* no stacking context, so open apps cover the dock */
   .desk-hero { position: static; max-width: none; margin-bottom: 26px; text-align: center; pointer-events: auto; }
-  .desk-meta { position: static; display: grid; justify-items: center; gap: 4px; margin-bottom: 20px; padding: 0; transform: none; white-space: normal; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0; border-radius: 0; }
-  .live-date { padding-left: 0; border: 0; }
-  .live-clock { flex-direction: column; align-items: center; gap: 0; }
-  .live-time { font: 300 4.2rem/1 var(--sans); letter-spacing: -0.03em; }
-  .live-zone { order: -1; margin-bottom: 4px; }
+  .widgets { position: static; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px; }
+  .w-clock { grid-column: 1 / -1; padding: 0 0 6px; text-align: center; background: none; border: 0; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .w-clock .w-label { justify-content: center; }
+  .live-time { font: 300 4.2rem/1 var(--sans); }
   .live-date { font-size: 15px; color: var(--text); }
-  .desk-hero h1 { font-size: clamp(1.2rem, 6.4vw, 1.7rem); }
+  .w-visits, .w-feature { border-radius: 24px; }
+  .w-feature { grid-column: auto; grid-row: auto; padding: 12px; }
+  .w-feature-desc { display: none; }
+  .w-feature-name { font-size: 13px; }
+  .widgets:has(.w-visits[hidden]) .w-feature { grid-column: 1 / -1; }
+  .desk-hero h1 { margin-inline: auto; font-size: clamp(1.2rem, 6.4vw, 1.7rem); }
   .desk-role { margin-inline: auto; font-size: 14px; }
   .founder-pill { margin-bottom: 12px; }
   .wall-static { position: fixed; right: -18%; top: auto; bottom: 110px; width: 80vw; height: 92vw; transform: none; opacity: 0.12; }
